@@ -1,19 +1,22 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobilecurling/core/classes/user/user.dart';
+import 'package:mobilecurling/core/providers/user/user.dart';
 import 'package:mobilecurling/features/server_listing/page_server_listing.dart';
 import 'package:mobilecurling/main.dart';
 
-class CardAuthentication extends StatefulWidget {
+class CardAuthentication extends ConsumerStatefulWidget {
   const CardAuthentication({
     super.key,
   });
 
   @override
-  State<CardAuthentication> createState() => _CardAuthenticationState();
+  ConsumerState<CardAuthentication> createState() => _CardAuthenticationState();
 }
 
-class _CardAuthenticationState extends State<CardAuthentication> {
+class _CardAuthenticationState extends ConsumerState<CardAuthentication> {
   final TextEditingController _username = TextEditingController(text: '');
   final TextEditingController _password = TextEditingController(text: '');
   @override
@@ -40,11 +43,12 @@ class _CardAuthenticationState extends State<CardAuthentication> {
                 children: [
                   ElevatedButton(
                       onPressed: () async {
-                        final response = await dio.post('$serverUrl/register',
+                        final response = await dio.post('$authServerUrl/register',
                             data: jsonEncode([
                               {'username': _username.text, 'password': _password.text}
                             ]));
                         if (response.statusCode == 200 && context.mounted) {
+                          ref.read(userManagerProvider.notifier).update(User(username: _username.text, password: _password.text));
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const PageServerListing(),
@@ -55,11 +59,12 @@ class _CardAuthenticationState extends State<CardAuthentication> {
                       child: const Text('Register')),
                   ElevatedButton(
                       onPressed: () async {
-                        final response = await dio.post('$serverUrl/login',
+                        final response = await dio.post('$authServerUrl/login',
                             data: jsonEncode([
                               {'username': _username.text, 'password': _password.text}
                             ]));
                         if (response.statusCode == 200 && context.mounted) {
+                          ref.read(userManagerProvider.notifier).update(User(username: _username.text, password: _password.text));
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const PageServerListing(),

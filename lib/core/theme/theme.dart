@@ -22,7 +22,7 @@ class ThemeDataCurling {
       textTheme: TextTheme(
           titleLarge: GoogleFonts.rubik(color: primaryColorDark, fontSize: 40),
           displayLarge: GoogleFonts.rubik(color: primaryColorDark, fontSize: 57),
-          displayMedium: GoogleFonts.rubik(color: primaryColorDark, fontSize: 35, letterSpacing: 2),
+          displayMedium: GoogleFonts.rubik(color: primaryColorLight, fontSize: 25, letterSpacing: 2),
           bodyMedium: GoogleFonts.rubik(color: defaultTextColorDark, fontSize: 14),
           bodySmall: GoogleFonts.rubik(color: defaultTextColorDark, fontSize: 12),
           headlineSmall: GoogleFonts.workSans(color: defaultTextColorDark, fontSize: 14, letterSpacing: 2)),
