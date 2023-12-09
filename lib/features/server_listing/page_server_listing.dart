@@ -6,6 +6,7 @@ import 'package:mobilecurling/core/classes/lobby/lobby.dart';
 import 'package:mobilecurling/core/providers/lobby/lobby.dart';
 import 'package:mobilecurling/core/providers/user/user.dart';
 import 'package:mobilecurling/core/theme/theme.dart';
+import 'package:mobilecurling/features/game/page_game.dart';
 import 'package:mobilecurling/main.dart';
 import 'package:uuid/uuid.dart';
 
@@ -31,8 +32,12 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
     final lobby = Lobby(id: const Uuid().v4(), playerOne: ref.read(userManagerProvider).username, playerTwo: null);
     final response = await dio.post('$lobbyServerUrl/lobby', data: lobby.toJson());
     ref.read(lobbyManagerProvider.notifier).update(lobby);
-    if (response.statusCode == 200) {
-      print(response.data);
+    if (response.statusCode == 200 && mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const PageGame(),
+        ),
+      );
     }
   }
 
@@ -126,7 +131,14 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
                             : Text('Against: ${lobby.playerTwo}'),
                         lobby.playerTwo == null
                             ? ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  ref.read(lobbyManagerProvider.notifier).update(lobby);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => const PageGame(),
+                                    ),
+                                  );
+                                },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

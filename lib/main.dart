@@ -10,7 +10,8 @@ void main() {
 
 final dio = Dio();
 const authServerUrl = 'https://auth-ic4hp354na-ew.a.run.app';
-const lobbyServerUrl = 'http://localhost:8080';
+const lobbyServerUrl = 'https://lobby-ic4hp354na-ew.a.run.app';
+const gameServerUrl = 'localhost:8080';
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
