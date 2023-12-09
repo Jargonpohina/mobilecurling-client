@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobilecurling/core/classes/game_state/game_state.dart';
 import 'package:mobilecurling/core/classes/message/message.dart';
 import 'package:mobilecurling/core/providers/lobby/lobby.dart';
 import 'package:mobilecurling/core/providers/user/user.dart';
@@ -19,6 +20,7 @@ class PageGame extends ConsumerStatefulWidget {
 
 class _PageGameState extends ConsumerState<PageGame> {
   List<String> messages = [];
+  GameState? game;
   @override
   void initState() {
     super.initState();
@@ -26,10 +28,13 @@ class _PageGameState extends ConsumerState<PageGame> {
     final uri = Uri.parse('ws://$gameServerUrl/game/$id');
     final channel = WebSocketChannel.connect(uri);
     Future.delayed(Duration.zero, () {
-      channel.sink.add(jsonEncode(Message(type: MessageType.join, user: ref.read(userManagerProvider)).toJson()));
+      channel.sink.add(jsonEncode(
+        Message(type: MessageType.join, user: ref.read(userManagerProvider), lobby: ref.read(lobbyManagerProvider)).toJson(),
+      ));
       channel.stream.listen((message) {
+        final map = jsonDecode(message);
         setState(() {
-          messages.add(message.toString());
+          game = GameState.fromJson(map);
         });
       });
     });
@@ -38,19 +43,31 @@ class _PageGameState extends ConsumerState<PageGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        for (final message in messages)
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(message),
-              ],
-            ),
-          ),
-      ],
-    ));
+        body: game == null
+            ? const Center(
+                child: Text('Initializing the game...'),
+              )
+            : game!.playerTwo == null
+                ? const Center(child: Text('Waiting for player to join...'))
+                : Stack(
+                    children: [
+                      Column(
+                        children: [
+                          Card(
+                            elevation: 10,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Text('Player one: ${game!.playerOne!.username}'),
+                                  Text('Player two: ${game!.playerTwo!.username}'),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ));
   }
 }
