@@ -33,6 +33,7 @@ class _PageGameState extends ConsumerState<PageGame> {
   Offset drag = const Offset(0, 0);
   WebSocketChannel? channel;
   GlobalKey dragButtonKey = GlobalKey();
+  bool isPortrait = false;
   @override
   void initState() {
     super.initState();
@@ -56,7 +57,6 @@ class _PageGameState extends ConsumerState<PageGame> {
     return Scaffold(
         body: Column(
       children: [
-        //Text('Game: ${game != null ? game.lobby!.id : 'initializing ${ref.read(lobbyManagerProvider)!.id}'}'),
         game == null
             ? const Center(
                 child: Column(
@@ -76,32 +76,51 @@ class _PageGameState extends ConsumerState<PageGame> {
                               child: CardDefault(
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Column(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      game.playerOneScore == game.playerTwoScore
-                                          ? Text(
-                                              'Game is tied',
-                                              style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: const Color.fromARGB(255, 247, 236, 136)),
-                                            )
-                                          : game.playerOneScore > game.playerTwoScore
+                                      Column(
+                                        children: [
+                                          game.playerOneScore == game.playerTwoScore
                                               ? Text(
-                                                  '${game.playerOne!.username} is winning!',
-                                                  style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.green[300]),
+                                                  'Game is tied',
+                                                  style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: const Color.fromARGB(255, 247, 236, 136)),
                                                 )
-                                              : Text(
-                                                  '${game.playerTwo!.username} is winning!',
-                                                  style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.green[300]),
-                                                ),
-                                      Text('Player one: ${game.playerOne!.username}'),
-                                      Text('Player two: ${game.playerTwo!.username}'),
+                                              : game.playerOneScore > game.playerTwoScore
+                                                  ? Text(
+                                                      '${game.playerOne!.username} is winning!',
+                                                      style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.green[300]),
+                                                    )
+                                                  : Text(
+                                                      '${game.playerTwo!.username} is winning!',
+                                                      style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.green[300]),
+                                                    ),
+                                          Text('Player one: ${game.playerOne!.username}'),
+                                          Text('Player two: ${game.playerTwo!.username}'),
+                                        ],
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            isPortrait = !isPortrait;
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(),
+                                        icon: const Icon(
+                                          Icons.rotate_90_degrees_ccw,
+                                          size: 32,
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
                               ),
                             ),
                             game.stones.isNotEmpty
-                                ? const Expanded(
-                                    child: GameRendering(),
+                                ? Expanded(
+                                    child: GameRendering(
+                                      isPortrait: isPortrait,
+                                    ),
                                   )
                                 : const SizedBox.shrink(),
                             CardDefault(
