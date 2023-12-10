@@ -12,6 +12,7 @@ import 'package:mobilecurling/core/shared_classes/message/message.dart';
 import 'package:mobilecurling/core/shared_classes/slide/slide.dart';
 import 'package:mobilecurling/features/game/game_rendering.dart';
 import 'package:mobilecurling/main.dart';
+import 'package:mobilecurling/widgets/card_default.dart';
 import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -68,8 +69,7 @@ class _PageGameState extends ConsumerState<PageGame> {
                         Column(
                           children: [
                             Center(
-                              child: Card(
-                                elevation: 10,
+                              child: CardDefault(
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobilecurling/core/providers/user/user.dart';
 import 'package:mobilecurling/core/shared_classes/user/user.dart';
+import 'package:mobilecurling/core/theme/theme.dart';
 import 'package:mobilecurling/features/server_listing/page_server_listing.dart';
 import 'package:mobilecurling/main.dart';
+import 'package:mobilecurling/widgets/card_default.dart';
 
 class CardAuthentication extends ConsumerStatefulWidget {
   const CardAuthentication({
@@ -17,12 +19,12 @@ class CardAuthentication extends ConsumerStatefulWidget {
 }
 
 class _CardAuthenticationState extends ConsumerState<CardAuthentication> {
+  String? errorText;
   final TextEditingController _username = TextEditingController(text: '');
   final TextEditingController _password = TextEditingController(text: '');
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
+    return CardDefault(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -36,6 +38,15 @@ class _CardAuthenticationState extends ConsumerState<CardAuthentication> {
               obscureText: true,
               decoration: const InputDecoration(label: Text('Password')),
             ),
+            errorText != null
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      errorText!,
+                      style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.red[300]),
+                    ),
+                  )
+                : const SizedBox.shrink(),
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
               child: Row(
@@ -43,33 +54,36 @@ class _CardAuthenticationState extends ConsumerState<CardAuthentication> {
                 children: [
                   ElevatedButton(
                       onPressed: () async {
-                        final response = await dio.post('$authServerUrl/register',
-                            data: jsonEncode([
-                              {'username': _username.text, 'password': _password.text}
-                            ]));
+                        final user = User(username: _username.text, password: _password.text);
+                        final response = await dio.post('$authServerUrl/register', data: jsonEncode(user.toJson()));
                         if (response.statusCode == 200 && context.mounted) {
-                          ref.read(userManagerProvider.notifier).update(User(username: _username.text, password: _password.text));
+                          ref.read(userManagerProvider.notifier).update(user);
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => const PageServerListing(),
                             ),
                           );
+                        } else {
+                          print('yeehaw');
                         }
                       },
                       child: const Text('Register')),
                   ElevatedButton(
                       onPressed: () async {
-                        final response = await dio.post('$authServerUrl/login',
-                            data: jsonEncode([
-                              {'username': _username.text, 'password': _password.text}
-                            ]));
-                        if (response.statusCode == 200 && context.mounted) {
-                          ref.read(userManagerProvider.notifier).update(User(username: _username.text, password: _password.text));
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const PageServerListing(),
-                            ),
-                          );
+                        try {
+                          final response = await dio.post('$authServerUrl/login', data: jsonEncode(User(username: _username.text, password: _password.text).toJson()));
+                          if (response.statusCode == 200 && context.mounted) {
+                            ref.read(userManagerProvider.notifier).update(User.fromJson(jsonDecode(response.data)));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const PageServerListing(),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          setState(() {
+                            errorText = 'Failed to log in.';
+                          });
                         }
                       },
                       child: const Text('Login')),
