@@ -37,6 +37,9 @@ class GameState with _$GameState {
     /// The ID of the player who's turn it is now
     @Default(null) User? playerInTurn,
 
+    /// If this is true, it requests the clients to reconnect to the websocket channel.
+    @Default(false) bool requestReconnect,
+
     /// If the players can slide a stone
     @Default(false) bool canSlide,
 
