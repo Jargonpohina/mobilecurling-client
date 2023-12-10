@@ -35,7 +35,7 @@ class _PageGameState extends ConsumerState<PageGame> {
     final id = const Uuid().v4();
     final uri = Uri.parse('wss://$gameServerUrl/game/$id');
     channel = WebSocketChannel.connect(uri);
-    Future.delayed(Duration.zero, () {
+    Future.delayed(Duration(milliseconds: 500), () {
       channel!.sink.add(jsonEncode(
         Message(type: MessageType.join, user: ref.read(userManagerProvider), lobby: ref.read(lobbyManagerProvider)).toJson(),
       ));
@@ -61,7 +61,7 @@ class _PageGameState extends ConsumerState<PageGame> {
                   ],
                 ),
               )
-            : game.playerTwo == null
+            : (game.playerTwo == null && game.stones.isNotEmpty)
                 ? const Center(child: Text('Waiting for player to join...'))
                 : Expanded(
                     child: Stack(

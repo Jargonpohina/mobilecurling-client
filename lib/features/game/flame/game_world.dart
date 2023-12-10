@@ -11,7 +11,7 @@ import 'package:mobilecurling/core/providers/game_state/game_state.dart';
 import 'package:mobilecurling/core/shared_classes/stone/stone.dart';
 
 class GameWorld extends FlameGame {
-  GameWorld({required this.width, required this.height, this.isPortrait = true, required this.ref});
+  GameWorld({required this.width, required this.height, this.isPortrait = false, required this.ref});
   final double width;
   final double height;
   final bool isPortrait;
@@ -40,6 +40,7 @@ class GameWorld extends FlameGame {
       final stones = ref.read(gameManagerProvider)!.stones;
       world.add(Sheet(width: width, height: height, isPortrait: isPortrait, ref: ref));
       for (final stone in stones) {
+        print('added stone');
         objects.add(StoneObj(width: width, height: height, stone: stone, isPortrait: isPortrait, ref: ref));
       }
       for (final stone in objects) {
