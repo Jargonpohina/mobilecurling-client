@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobilecurling/core/providers/dragging_stone/dragging_stone.dart';
 import 'package:mobilecurling/core/providers/game_state/game_state.dart';
 import 'package:mobilecurling/core/providers/lobby/lobby.dart';
 import 'package:mobilecurling/core/providers/user/user.dart';
@@ -30,6 +32,7 @@ class _PageGameState extends ConsumerState<PageGame> {
   List<String> messages = [];
   Offset drag = const Offset(0, 0);
   WebSocketChannel? channel;
+  GlobalKey dragButtonKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -110,42 +113,7 @@ class _PageGameState extends ConsumerState<PageGame> {
                                         children: [
                                           game.playerInTurn == ref.read(userManagerProvider)
                                               ? game.canSlide
-                                                  ? Padding(
-                                                      padding: const EdgeInsets.only(bottom: 32.0),
-                                                      child: GestureDetector(
-                                                        onPanStart: (details) {
-                                                          drag = const Offset(0, 0);
-                                                        },
-                                                        onPanUpdate: (details) {
-                                                          drag += details.delta;
-                                                        },
-                                                        onPanEnd: (details) {
-                                                          double direction = (drag.direction * (180 / pi) + 90);
-                                                          if (direction < 0) {
-                                                            direction = 360 + direction;
-                                                          }
-                                                          double velocity = details.velocity.pixelsPerSecond.dx.abs() + details.velocity.pixelsPerSecond.dy.abs();
-                                                          velocity = velocity / 15;
-                                                          if (channel != null) {
-                                                            channel!.sink.add(jsonEncode(
-                                                              Message(
-                                                                      type: MessageType.slide,
-                                                                      user: ref.read(userManagerProvider),
-                                                                      lobby: ref.read(lobbyManagerProvider),
-                                                                      slide: Slide(angle: direction, speed: velocity, user: ref.read(userManagerProvider)))
-                                                                  .toJson(),
-                                                            ));
-                                                          }
-                                                        },
-                                                        child: Image.asset(
-                                                          game.playerOne == ref.read(userManagerProvider) ? 'assets/stone_one.png' : 'assets/stone_two.png',
-                                                          width: 64,
-                                                          height: 64,
-                                                          filterQuality: FilterQuality.none,
-                                                          scale: 0.01,
-                                                        ),
-                                                      ),
-                                                    )
+                                                  ? StoneDragControl(dragButtonKey: dragButtonKey, channel: channel, game: game)
                                                   : const Padding(
                                                       padding: EdgeInsets.all(8.0),
                                                       child: Text('Wait until stones have stopped.'),
@@ -197,5 +165,159 @@ class _PageGameState extends ConsumerState<PageGame> {
                   ),
       ],
     ));
+  }
+}
+
+class StoneDragControl extends ConsumerStatefulWidget {
+  const StoneDragControl({
+    super.key,
+    required this.dragButtonKey,
+    required this.channel,
+    required this.game,
+  });
+
+  final GlobalKey<State<StatefulWidget>> dragButtonKey;
+  final WebSocketChannel? channel;
+  final gs.GameState? game;
+
+  @override
+  ConsumerState<StoneDragControl> createState() => _StoneDragControlState();
+}
+
+class _StoneDragControlState extends ConsumerState<StoneDragControl> {
+  bool allowed = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 0.0),
+      child: Column(
+        children: [
+          Draggable(
+            key: widget.dragButtonKey,
+            onDragUpdate: (details) {
+              RenderBox box = widget.dragButtonKey.currentContext!.findRenderObject() as RenderBox;
+              Offset pos = box.localToGlobal(Offset.zero);
+              final from = pos.toVector2();
+              final to = details.globalPosition.toVector2();
+              double direction = ((details.globalPosition - pos).direction) * (180 / pi) + 90;
+              if (direction < 0) {
+                direction = 360 + direction;
+              }
+              final distance = from.distanceTo(to);
+              final speed = distance;
+              print('$direction $distance');
+              if ((direction < 90 || direction > 270) && speed > 60 && speed < 300) {
+                if (!allowed) {
+                  setState(() {
+                    allowed = true;
+                  });
+                }
+              } else {
+                if (allowed) {
+                  setState(() {
+                    allowed = false;
+                  });
+                }
+              }
+              ref.read(draggingStoneProvider.notifier).update(DraggingStoneDetails(allowed: allowed, speed: speed, direction: direction));
+            },
+            onDragEnd: (details) {
+              RenderBox box = widget.dragButtonKey.currentContext!.findRenderObject() as RenderBox;
+              Offset pos = box.localToGlobal(Offset.zero);
+              final from = pos.toVector2();
+              final to = details.offset.toVector2();
+              double direction = ((details.offset - pos).direction) * (180 / pi) + 90;
+              if (direction < 0) {
+                direction = 360 + direction;
+              }
+              final distance = from.distanceTo(to);
+              final speed = distance;
+              if (allowed) {
+                if (widget.channel != null) {
+                  widget.channel!.sink.add(jsonEncode(
+                    Message(
+                            type: MessageType.slide,
+                            user: ref.read(userManagerProvider),
+                            lobby: ref.read(lobbyManagerProvider),
+                            slide: Slide(angle: direction, speed: speed, user: ref.read(userManagerProvider)))
+                        .toJson(),
+                  ));
+                }
+              }
+            },
+            childWhenDragging: Opacity(
+              opacity: 0.3,
+              child: Image.asset(
+                widget.game!.playerOne == ref.read(userManagerProvider) ? 'assets/stone_one.png' : 'assets/stone_two.png',
+                width: 64,
+                height: 64,
+                filterQuality: FilterQuality.none,
+                scale: 0.01,
+                color: allowed ? null : Colors.red.withOpacity(0.5),
+              ),
+            ),
+            feedback: DraggingStone(
+              game: widget.game!,
+              data: MediaQueryData.fromView(View.of(context)),
+            ),
+            child: Image.asset(
+              widget.game!.playerOne == ref.read(userManagerProvider) ? 'assets/stone_one.png' : 'assets/stone_two.png',
+              width: 64,
+              height: 64,
+              filterQuality: FilterQuality.none,
+              scale: 0.01,
+            ),
+          ),
+          const Card(
+              child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('Towards goal is 0° or 360°'),
+          )),
+        ],
+      ),
+    );
+  }
+}
+
+class DraggingStone extends ConsumerWidget {
+  const DraggingStone({
+    super.key,
+    required this.game,
+    required this.data,
+  });
+
+  final gs.GameState game;
+  final MediaQueryData data;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final details = ref.watch(draggingStoneProvider);
+    return details != null
+        ? Transform.translate(
+            offset: const Offset(-16, -8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  game.playerOne == ref.read(userManagerProvider) ? 'assets/stone_one.png' : 'assets/stone_two.png',
+                  width: 64,
+                  height: 64,
+                  filterQuality: FilterQuality.none,
+                  scale: 0.01,
+                  color: details.allowed ? null : Colors.red.withOpacity(0.5),
+                ),
+                Text(
+                  'Speed: ${(details.speed).toStringAsFixed(2)} cm/s',
+                  style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: details.allowed ? null : Colors.red[300]),
+                ),
+                Text(
+                  'Direction: ${(details.direction).toStringAsFixed(0)}°',
+                  style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: details.allowed ? null : Colors.red[300]),
+                ),
+              ],
+            ),
+          )
+        : const SizedBox.shrink();
   }
 }
