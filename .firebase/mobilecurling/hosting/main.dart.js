@@ -82468,7 +82468,7 @@ A.ph.prototype={
 ak(){return new A.T7(A.a([],t.s),B.h,B.k)}}
 A.T7.prototype={
 aB(){this.aX()
-this.y=A.aIw(A.dA("ws://rts-ic4hp354na-ew.a.run.app/game/"+B.eM.Ap(),0,null),null)
+this.y=A.aIw(A.dA("wss://rts-ic4hp354na-ew.a.run.app/game/"+B.eM.Ap(),0,null),null)
 A.rR(B.o,new A.alg(this),t.P)},
 N(a){var s,r,q,p,o,n,m=this,l=null,k=m.gf3().VZ($.Gn(),t.xO),j=k==null
 if(!j){s=k.gTT()
