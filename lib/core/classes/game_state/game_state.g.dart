@@ -22,8 +22,11 @@ _$GameStateImpl _$$GameStateImplFromJson(Map<String, dynamic> json) =>
       playerInTurn: json['playerInTurn'] == null
           ? null
           : User.fromJson(json['playerInTurn'] as Map<String, dynamic>),
-      requestReconnect: json['requestReconnect'] as bool? ?? false,
       canSlide: json['canSlide'] as bool? ?? false,
+      stones: (json['stones'] as List<dynamic>?)
+              ?.map((e) => StoneAPI.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       gameState: $enumDecodeNullable(_$StateEnumMap, json['gameState']) ??
           State.started,
     );
@@ -36,8 +39,8 @@ Map<String, dynamic> _$$GameStateImplToJson(_$GameStateImpl instance) =>
       'playerTwo': instance.playerTwo,
       'playerTwoScore': instance.playerTwoScore,
       'playerInTurn': instance.playerInTurn,
-      'requestReconnect': instance.requestReconnect,
       'canSlide': instance.canSlide,
+      'stones': instance.stones,
       'gameState': _$StateEnumMap[instance.gameState]!,
     };
 

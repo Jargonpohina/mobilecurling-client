@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mobilecurling/core/classes/lobby/lobby.dart';
+import 'package:mobilecurling/core/classes/stone/stone.dart';
 import 'package:mobilecurling/core/classes/user/user.dart';
 
 part 'game_state.freezed.dart';
@@ -37,11 +38,9 @@ class GameState with _$GameState {
     /// The ID of the player who's turn it is now
     @Default(null) User? playerInTurn,
 
-    /// If this is true, it requests the clients to reconnect to the websocket channel.
-    @Default(false) bool requestReconnect,
-
     /// If the players can slide a stone
     @Default(false) bool canSlide,
+    @Default([]) List<StoneAPI> stones,
 
     /// The state of the game. It's either started or ended.
     @Default(State.started) State gameState,

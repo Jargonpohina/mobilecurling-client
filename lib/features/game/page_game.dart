@@ -12,6 +12,7 @@ import 'package:mobilecurling/core/providers/user/user.dart';
 import 'package:mobilecurling/main.dart';
 import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:simple_shadow/simple_shadow.dart';
 
 class PageGame extends ConsumerStatefulWidget {
   const PageGame({
@@ -81,46 +82,95 @@ class _PageGameState extends ConsumerState<PageGame> {
                                 ),
                               ),
                             ),
-                            const Spacer(),
+                            Expanded(
+                              child: LayoutBuilder(builder: (context, constraints) {
+                                // 3657.6
+                                // säde 182.88
+                                const double height = 4572.0;
+                                const double width = 500.0;
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      width: constraints.maxWidth,
+                                      height: constraints.maxHeight,
+                                      color: Colors.white,
+                                    ),
+                                    Transform.translate(
+                                      offset: Offset((constraints.maxWidth / 2 + (constraints.maxWidth * (182.88 / width))) * (182.88 / width),
+                                          (constraints.maxHeight) * (1 - (3657.6 / height))),
+                                      child: Container(
+                                        width: (constraints.maxWidth) * (182.88 / width),
+                                        height: (constraints.maxWidth) * (182.88 / width),
+                                        decoration: BoxDecoration(color: Colors.red.withOpacity(0.3), borderRadius: BorderRadius.circular(10000)),
+                                      ),
+                                    ),
+                                    for (final stone in game!.stones)
+                                      SimpleShadow(
+                                        opacity: 0.3,
+                                        child: Transform.translate(
+                                          offset: Offset((constraints.maxWidth - 32) * (stone.y / width), (constraints.maxHeight - 32) * (1.0 - (stone.x / height))),
+                                          child: Image.asset(
+                                            game!.playerOne == stone.user ? 'assets/stone_one.png' : 'assets/stone_two.png',
+                                            width: 32,
+                                            height: 32,
+                                            filterQuality: FilterQuality.none,
+                                            scale: 0.01,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              }),
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 32.0),
-                                  child: GestureDetector(
-                                    onPanStart: (details) {
-                                      drag = const Offset(0, 0);
-                                    },
-                                    onPanUpdate: (details) {
-                                      drag += details.delta;
-                                    },
-                                    onPanEnd: (details) {
-                                      double direction = (drag.direction * (180 / pi) + 90);
-                                      if (direction < 0) {
-                                        direction = 360 + direction;
-                                      }
-                                      double velocity = details.velocity.pixelsPerSecond.dx.abs() + details.velocity.pixelsPerSecond.dy.abs();
-                                      velocity = velocity / 15;
-                                      if (channel != null) {
-                                        channel!.sink.add(jsonEncode(
-                                          Message(
-                                                  type: MessageType.slide,
-                                                  user: ref.read(userManagerProvider),
-                                                  lobby: ref.read(lobbyManagerProvider),
-                                                  slide: Slide(angle: direction, speed: velocity, user: ref.read(userManagerProvider)))
-                                              .toJson(),
-                                        ));
-                                      }
-                                    },
-                                    child: Image.asset(
-                                      'assets/stone_one.png',
-                                      width: 64,
-                                      height: 64,
-                                      filterQuality: FilterQuality.none,
-                                      scale: 0.01,
-                                    ),
-                                  ),
-                                )
+                                game!.playerInTurn == ref.read(userManagerProvider)
+                                    ? game!.canSlide
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(bottom: 32.0),
+                                            child: GestureDetector(
+                                              onPanStart: (details) {
+                                                drag = const Offset(0, 0);
+                                              },
+                                              onPanUpdate: (details) {
+                                                drag += details.delta;
+                                              },
+                                              onPanEnd: (details) {
+                                                double direction = (drag.direction * (180 / pi) + 90);
+                                                if (direction < 0) {
+                                                  direction = 360 + direction;
+                                                }
+                                                double velocity = details.velocity.pixelsPerSecond.dx.abs() + details.velocity.pixelsPerSecond.dy.abs();
+                                                velocity = velocity / 15;
+                                                if (channel != null) {
+                                                  channel!.sink.add(jsonEncode(
+                                                    Message(
+                                                            type: MessageType.slide,
+                                                            user: ref.read(userManagerProvider),
+                                                            lobby: ref.read(lobbyManagerProvider),
+                                                            slide: Slide(angle: direction, speed: velocity, user: ref.read(userManagerProvider)))
+                                                        .toJson(),
+                                                  ));
+                                                }
+                                              },
+                                              child: Image.asset(
+                                                game!.playerOne == ref.read(userManagerProvider) ? 'assets/stone_one.png' : 'assets/stone_two.png',
+                                                width: 64,
+                                                height: 64,
+                                                filterQuality: FilterQuality.none,
+                                                scale: 0.01,
+                                              ),
+                                            ),
+                                          )
+                                        : const Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Text('Wait until stones have stopped.'),
+                                          )
+                                    : const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text('Wait for your turn.'),
+                                      ),
                               ],
                             )
                           ],

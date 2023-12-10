@@ -38,11 +38,9 @@ mixin _$GameState {
   /// The ID of the player who's turn it is now
   User? get playerInTurn => throw _privateConstructorUsedError;
 
-  /// If this is true, it requests the clients to reconnect to the websocket channel.
-  bool get requestReconnect => throw _privateConstructorUsedError;
-
   /// If the players can slide a stone
   bool get canSlide => throw _privateConstructorUsedError;
+  List<StoneAPI> get stones => throw _privateConstructorUsedError;
 
   /// The state of the game. It's either started or ended.
   State get gameState => throw _privateConstructorUsedError;
@@ -65,8 +63,8 @@ abstract class $GameStateCopyWith<$Res> {
       User? playerTwo,
       int playerTwoScore,
       User? playerInTurn,
-      bool requestReconnect,
       bool canSlide,
+      List<StoneAPI> stones,
       State gameState});
 
   $LobbyCopyWith<$Res>? get lobby;
@@ -94,8 +92,8 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
     Object? playerTwo = freezed,
     Object? playerTwoScore = null,
     Object? playerInTurn = freezed,
-    Object? requestReconnect = null,
     Object? canSlide = null,
+    Object? stones = null,
     Object? gameState = null,
   }) {
     return _then(_value.copyWith(
@@ -123,14 +121,14 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
           ? _value.playerInTurn
           : playerInTurn // ignore: cast_nullable_to_non_nullable
               as User?,
-      requestReconnect: null == requestReconnect
-          ? _value.requestReconnect
-          : requestReconnect // ignore: cast_nullable_to_non_nullable
-              as bool,
       canSlide: null == canSlide
           ? _value.canSlide
           : canSlide // ignore: cast_nullable_to_non_nullable
               as bool,
+      stones: null == stones
+          ? _value.stones
+          : stones // ignore: cast_nullable_to_non_nullable
+              as List<StoneAPI>,
       gameState: null == gameState
           ? _value.gameState
           : gameState // ignore: cast_nullable_to_non_nullable
@@ -202,8 +200,8 @@ abstract class _$$GameStateImplCopyWith<$Res>
       User? playerTwo,
       int playerTwoScore,
       User? playerInTurn,
-      bool requestReconnect,
       bool canSlide,
+      List<StoneAPI> stones,
       State gameState});
 
   @override
@@ -233,8 +231,8 @@ class __$$GameStateImplCopyWithImpl<$Res>
     Object? playerTwo = freezed,
     Object? playerTwoScore = null,
     Object? playerInTurn = freezed,
-    Object? requestReconnect = null,
     Object? canSlide = null,
+    Object? stones = null,
     Object? gameState = null,
   }) {
     return _then(_$GameStateImpl(
@@ -262,14 +260,14 @@ class __$$GameStateImplCopyWithImpl<$Res>
           ? _value.playerInTurn
           : playerInTurn // ignore: cast_nullable_to_non_nullable
               as User?,
-      requestReconnect: null == requestReconnect
-          ? _value.requestReconnect
-          : requestReconnect // ignore: cast_nullable_to_non_nullable
-              as bool,
       canSlide: null == canSlide
           ? _value.canSlide
           : canSlide // ignore: cast_nullable_to_non_nullable
               as bool,
+      stones: null == stones
+          ? _value._stones
+          : stones // ignore: cast_nullable_to_non_nullable
+              as List<StoneAPI>,
       gameState: null == gameState
           ? _value.gameState
           : gameState // ignore: cast_nullable_to_non_nullable
@@ -288,10 +286,11 @@ class _$GameStateImpl extends _GameState {
       this.playerTwo = null,
       this.playerTwoScore = 0,
       this.playerInTurn = null,
-      this.requestReconnect = false,
       this.canSlide = false,
+      final List<StoneAPI> stones = const [],
       this.gameState = State.started})
-      : super._();
+      : _stones = stones,
+        super._();
 
   factory _$GameStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$GameStateImplFromJson(json);
@@ -326,15 +325,18 @@ class _$GameStateImpl extends _GameState {
   @JsonKey()
   final User? playerInTurn;
 
-  /// If this is true, it requests the clients to reconnect to the websocket channel.
-  @override
-  @JsonKey()
-  final bool requestReconnect;
-
   /// If the players can slide a stone
   @override
   @JsonKey()
   final bool canSlide;
+  final List<StoneAPI> _stones;
+  @override
+  @JsonKey()
+  List<StoneAPI> get stones {
+    if (_stones is EqualUnmodifiableListView) return _stones;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_stones);
+  }
 
   /// The state of the game. It's either started or ended.
   @override
@@ -343,7 +345,7 @@ class _$GameStateImpl extends _GameState {
 
   @override
   String toString() {
-    return 'GameState(lobby: $lobby, playerOne: $playerOne, playerOneScore: $playerOneScore, playerTwo: $playerTwo, playerTwoScore: $playerTwoScore, playerInTurn: $playerInTurn, requestReconnect: $requestReconnect, canSlide: $canSlide, gameState: $gameState)';
+    return 'GameState(lobby: $lobby, playerOne: $playerOne, playerOneScore: $playerOneScore, playerTwo: $playerTwo, playerTwoScore: $playerTwoScore, playerInTurn: $playerInTurn, canSlide: $canSlide, stones: $stones, gameState: $gameState)';
   }
 
   @override
@@ -362,10 +364,9 @@ class _$GameStateImpl extends _GameState {
                 other.playerTwoScore == playerTwoScore) &&
             (identical(other.playerInTurn, playerInTurn) ||
                 other.playerInTurn == playerInTurn) &&
-            (identical(other.requestReconnect, requestReconnect) ||
-                other.requestReconnect == requestReconnect) &&
             (identical(other.canSlide, canSlide) ||
                 other.canSlide == canSlide) &&
+            const DeepCollectionEquality().equals(other._stones, _stones) &&
             (identical(other.gameState, gameState) ||
                 other.gameState == gameState));
   }
@@ -380,8 +381,8 @@ class _$GameStateImpl extends _GameState {
       playerTwo,
       playerTwoScore,
       playerInTurn,
-      requestReconnect,
       canSlide,
+      const DeepCollectionEquality().hash(_stones),
       gameState);
 
   @JsonKey(ignore: true)
@@ -406,8 +407,8 @@ abstract class _GameState extends GameState {
       final User? playerTwo,
       final int playerTwoScore,
       final User? playerInTurn,
-      final bool requestReconnect,
       final bool canSlide,
+      final List<StoneAPI> stones,
       final State gameState}) = _$GameStateImpl;
   const _GameState._() : super._();
 
@@ -440,12 +441,10 @@ abstract class _GameState extends GameState {
   User? get playerInTurn;
   @override
 
-  /// If this is true, it requests the clients to reconnect to the websocket channel.
-  bool get requestReconnect;
-  @override
-
   /// If the players can slide a stone
   bool get canSlide;
+  @override
+  List<StoneAPI> get stones;
   @override
 
   /// The state of the game. It's either started or ended.
