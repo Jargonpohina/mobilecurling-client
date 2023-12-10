@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobilecurling/core/providers/dragging_stone/dragging_stone.dart';
 import 'package:mobilecurling/core/providers/game_state/game_state.dart';
 import 'package:mobilecurling/core/providers/lobby/lobby.dart';
+import 'package:mobilecurling/core/providers/orientation/orientation.dart';
 import 'package:mobilecurling/core/providers/user/user.dart';
 import 'package:mobilecurling/core/shared_classes/game_state/game_state.dart' as gs;
 import 'package:mobilecurling/core/shared_classes/message/message.dart';
@@ -101,9 +102,7 @@ class _PageGameState extends ConsumerState<PageGame> {
                                       ),
                                       IconButton(
                                         onPressed: () {
-                                          setState(() {
-                                            isPortrait = !isPortrait;
-                                          });
+                                          ref.read(portraitManagerProvider.notifier).toggle();
                                         },
                                         style: ElevatedButton.styleFrom(),
                                         icon: const Icon(
@@ -117,10 +116,8 @@ class _PageGameState extends ConsumerState<PageGame> {
                               ),
                             ),
                             game.stones.isNotEmpty
-                                ? Expanded(
-                                    child: GameRendering(
-                                      isPortrait: isPortrait,
-                                    ),
+                                ? const Expanded(
+                                    child: GameRendering(),
                                   )
                                 : const SizedBox.shrink(),
                             CardDefault(
