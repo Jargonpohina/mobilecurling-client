@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobilecurling/core/classes/lobby/lobby.dart';
+import 'package:mobilecurling/core/shared_classes/lobby/lobby.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'lobby.g.dart';

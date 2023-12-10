@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobilecurling/core/classes/lobby/lobby.dart';
 import 'package:mobilecurling/core/providers/lobby/lobby.dart';
 import 'package:mobilecurling/core/providers/user/user.dart';
+import 'package:mobilecurling/core/shared_classes/lobby/lobby.dart';
 import 'package:mobilecurling/core/theme/theme.dart';
 import 'package:mobilecurling/features/game/page_game.dart';
 import 'package:mobilecurling/main.dart';

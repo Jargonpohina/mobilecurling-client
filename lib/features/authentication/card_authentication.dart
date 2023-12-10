@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobilecurling/core/classes/user/user.dart';
 import 'package:mobilecurling/core/providers/user/user.dart';
+import 'package:mobilecurling/core/shared_classes/user/user.dart';
 import 'package:mobilecurling/features/server_listing/page_server_listing.dart';
 import 'package:mobilecurling/main.dart';
 
