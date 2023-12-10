@@ -55,7 +55,10 @@ class _CardAuthenticationState extends ConsumerState<CardAuthentication> {
                   ElevatedButton(
                       onPressed: () async {
                         final user = User(username: _username.text, password: _password.text);
-                        final response = await dio.post('$authServerUrl/register', data: jsonEncode(user.toJson()));
+                        final response = await dio.post(
+                          '$authServerUrl/register',
+                          data: jsonEncode(user.toJson()),
+                        );
                         if (response.statusCode == 200 && context.mounted) {
                           ref.read(userManagerProvider.notifier).update(user);
                           Navigator.of(context).push(
@@ -63,15 +66,16 @@ class _CardAuthenticationState extends ConsumerState<CardAuthentication> {
                               builder: (context) => const PageServerListing(),
                             ),
                           );
-                        } else {
-                          print('yeehaw');
                         }
                       },
                       child: const Text('Register')),
                   ElevatedButton(
                       onPressed: () async {
                         try {
-                          final response = await dio.post('$authServerUrl/login', data: jsonEncode(User(username: _username.text, password: _password.text).toJson()));
+                          final response = await dio.post(
+                            '$authServerUrl/login',
+                            data: jsonEncode(User(username: _username.text, password: _password.text).toJson()),
+                          );
                           if (response.statusCode == 200 && context.mounted) {
                             ref.read(userManagerProvider.notifier).update(User.fromJson(jsonDecode(response.data)));
                             Navigator.of(context).push(
