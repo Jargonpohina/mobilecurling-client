@@ -34,7 +34,7 @@ class PageAuthentication extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: FilledButton(onPressed: _launchUrl, child: Text('Check out WalkScape')),
+            child: FilledButton(onPressed: _launchUrl, child: const Text('Check out WalkScape')),
           ),
           const CardAuthentication(),
         ],

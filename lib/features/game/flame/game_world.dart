@@ -8,6 +8,7 @@ import 'package:flutter/material.dart' as material;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobilecurling/core/providers/game_state/game_state.dart';
+import 'package:mobilecurling/core/providers/user/user.dart';
 import 'package:mobilecurling/core/shared_classes/stone/stone.dart';
 
 class GameWorld extends FlameGame {
@@ -64,11 +65,23 @@ class Sheet extends PositionComponent {
   Future<void> onLoad() async {
     final paintIce = Paint()..color = material.Colors.white;
     final sheet = RectangleComponent.fromRect(Rect.fromLTRB(0, 0, width, height), paint: paintIce);
-    final paintGoalBiggest = Paint()..color = material.Colors.blue.withOpacity(0.2);
-    final goalBiggest =
-        CircleComponent(radius: 182.22, paint: paintGoalBiggest, position: isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250), anchor: Anchor.center);
+    final paintGoalRed = Paint()..color = material.Colors.red.withOpacity(0.2);
+    final goalRed =
+        CircleComponent(radius: 182.22, paint: paintGoalRed, position: isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250), anchor: Anchor.center);
+    final paintGoalWhiteOuter = Paint()..color = material.Colors.white;
+    final goalWhiteOuter =
+        CircleComponent(radius: 130, paint: paintGoalWhiteOuter, position: isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250), anchor: Anchor.center);
+    final paintGoalBlue = Paint()..color = material.Colors.blue.withOpacity(0.2);
+    final goalBlue =
+        CircleComponent(radius: 80, paint: paintGoalBlue, position: isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250), anchor: Anchor.center);
+    final paintGoalWhiteInner = Paint()..color = material.Colors.white;
+    final goalWhiteInner =
+        CircleComponent(radius: 30, paint: paintGoalWhiteInner, position: isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250), anchor: Anchor.center);
     add(sheet);
-    add(goalBiggest);
+    add(goalRed);
+    add(goalWhiteOuter);
+    add(goalBlue);
+    add(goalWhiteInner);
   }
 }
 
@@ -88,6 +101,16 @@ class StoneObj extends PositionComponent {
       position = Vector2(thisStone.y, height - thisStone.x);
     } else {
       position = Vector2(thisStone.x, thisStone.y);
+    }
+    if (thisStone.x == 548.64 && thisStone.y == 250) {
+      if (thisStone.user != ref.read(userManagerProvider)) {
+        position = Vector2(-1000, -1000);
+      }
+      if (isPortrait) {
+        angle = 90 * (pi / 180);
+      } else {
+        angle = 180 * (pi / 180);
+      }
     }
     angle += min(position.distanceTo(lastPosition) * 0.005, 0.1);
     lastPosition = Vector2(position.x, position.y);

@@ -96,8 +96,38 @@ class _PageGameState extends ConsumerState<PageGame> {
                                                       '${game.playerTwo!.username} is winning!',
                                                       style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.green[300]),
                                                     ),
-                                          Text('Player one: ${game.playerOne!.username}'),
-                                          Text('Player two: ${game.playerTwo!.username}'),
+                                          Row(
+                                            children: [
+                                              Text('Player one: ${game.playerOne!.username} '),
+                                              const Icon(
+                                                Icons.star,
+                                                size: 16,
+                                                color: Color.fromARGB(255, 248, 150, 245),
+                                              ),
+                                              Text(
+                                                ' ${game.playerOne!.score}',
+                                                style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(
+                                                      color: const Color.fromARGB(255, 248, 150, 245),
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text('Player two: ${game.playerTwo!.username} '),
+                                              const Icon(
+                                                Icons.star,
+                                                size: 16,
+                                                color: Color.fromARGB(255, 248, 150, 245),
+                                              ),
+                                              Text(
+                                                ' ${game.playerTwo!.score}',
+                                                style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(
+                                                      color: const Color.fromARGB(255, 248, 150, 245),
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                       IconButton(
