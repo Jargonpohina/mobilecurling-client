@@ -33,7 +33,7 @@ class _PageGameState extends ConsumerState<PageGame> {
   void initState() {
     super.initState();
     final id = const Uuid().v4();
-    final uri = Uri.parse('ws://$gameServerUrl/game/$id');
+    final uri = Uri.parse('wss://$gameServerUrl/game/$id');
     channel = WebSocketChannel.connect(uri);
     Future.delayed(Duration.zero, () {
       channel!.sink.add(jsonEncode(
