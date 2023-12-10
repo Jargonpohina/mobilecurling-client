@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,7 +38,10 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
 
   Future<void> joinLobby(Lobby lobby) async {
     try {
-      final response = await dio.post('$lobbyServerUrl/lobby/join', data: lobby.toJson(), options: Options(headers: {'Access-Control-Allow-Origin': '*'}));
+      final response = await dio.post(
+        '$lobbyServerUrl/lobby/join',
+        data: lobby.toJson(),
+      );
       final responseLobby = Lobby.fromJson(jsonDecode(response.data));
       ref.read(lobbyManagerProvider.notifier).update(responseLobby);
       if (mounted) {
@@ -59,7 +61,10 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
 
   Future<void> createLobby() async {
     final lobby = Lobby(id: const Uuid().v4(), playerOne: ref.read(userManagerProvider), playerTwo: null, createdAt: DateTime.now());
-    final response = await dio.post('$lobbyServerUrl/lobby', data: lobby.toJson(), options: Options(headers: {'Access-Control-Allow-Origin': '*'}));
+    final response = await dio.post(
+      '$lobbyServerUrl/lobby',
+      data: lobby.toJson(),
+    );
     ref.read(lobbyManagerProvider.notifier).update(lobby);
     if (response.statusCode == 200 && mounted) {
       Navigator.of(context).push(
@@ -72,7 +77,9 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
 
   Future<void> loadLobbies() async {
     lobbies.clear();
-    final response = await dio.get('$lobbyServerUrl/lobby', options: Options(headers: {'Access-Control-Allow-Origin': '*'}));
+    final response = await dio.get(
+      '$lobbyServerUrl/lobby',
+    );
     if (response.statusCode == 200) {
       if (response.data is String) {
         if ((response.data as String).isNotEmpty) {
