@@ -13,6 +13,7 @@ import 'package:mobilecurling/core/providers/user/user.dart';
 import 'package:mobilecurling/core/shared_classes/game_state/game_state.dart' as gs;
 import 'package:mobilecurling/core/shared_classes/message/message.dart';
 import 'package:mobilecurling/core/shared_classes/slide/slide.dart';
+import 'package:mobilecurling/core/shared_classes/user/user.dart';
 import 'package:mobilecurling/core/theme/theme.dart';
 import 'package:mobilecurling/features/game/game_rendering.dart';
 import 'package:mobilecurling/main.dart';
@@ -189,8 +190,23 @@ class _PageGameState extends ConsumerState<PageGame> {
                                                 Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: ElevatedButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context).pop();
+                                                      onPressed: () async {
+                                                        try {
+                                                          final response = await dio.post(
+                                                            '$authServerUrl/login',
+                                                            data: jsonEncode(
+                                                                User(username: ref.read(userManagerProvider).username, password: ref.read(userManagerProvider).password)
+                                                                    .toJson()),
+                                                          );
+                                                          if (response.statusCode == 200 && context.mounted) {
+                                                            ref.read(userManagerProvider.notifier).update(User.fromJson(jsonDecode(response.data)));
+                                                          }
+                                                        } catch (e) {
+                                                          // Do nothing.
+                                                        }
+                                                        if (context.mounted) {
+                                                          Navigator.of(context).pop();
+                                                        }
                                                       },
                                                       child: const Row(
                                                         children: [
