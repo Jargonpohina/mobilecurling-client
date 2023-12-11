@@ -269,16 +269,6 @@ class _StoneDragControlState extends ConsumerState<StoneDragControl> {
               ref.read(draggingStoneProvider.notifier).update(DraggingStoneDetails(allowed: allowed, speed: speed, direction: direction));
             },
             onDragEnd: (details) {
-              RenderBox box = widget.dragButtonKey.currentContext!.findRenderObject() as RenderBox;
-              Offset pos = box.localToGlobal(Offset.zero);
-              final from = pos.toVector2();
-              final to = details.offset.toVector2();
-              double direction = ((details.offset - pos).direction) * (180 / pi) + 90;
-              if (direction < 0) {
-                direction = 360 + direction;
-              }
-              final distance = from.distanceTo(to);
-              final speed = distance;
               if (allowed) {
                 if (widget.channel != null) {
                   widget.channel!.sink.add(jsonEncode(
@@ -286,7 +276,8 @@ class _StoneDragControlState extends ConsumerState<StoneDragControl> {
                             type: MessageType.slide,
                             user: ref.read(userManagerProvider),
                             lobby: ref.read(lobbyManagerProvider),
-                            slide: Slide(angle: direction, speed: speed, user: ref.read(userManagerProvider)))
+                            slide: Slide(
+                                angle: ref.read(draggingStoneProvider)!.direction, speed: ref.read(draggingStoneProvider)!.speed, user: ref.read(userManagerProvider)))
                         .toJson(),
                   ));
                 }
