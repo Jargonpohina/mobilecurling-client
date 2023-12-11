@@ -39,7 +39,7 @@ class Logo extends StatelessWidget {
               .then()
               .scale(duration: 2000.ms, begin: const Offset(1, 1), end: const Offset(0.9, 0.9), curve: Curves.easeInOutCirc),
           Text(
-            'Created by Schamppu and Tikibeni',
+            'Created by Schamppu and tikibeni',
             style: ThemeDataCurling().darkTheme.textTheme.bodyMedium,
           ),
         ],

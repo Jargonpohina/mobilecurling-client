@@ -82803,7 +82803,7 @@ case 2:if(!b)throw A.c(A.cb("Could not launch "+q.k(0)))
 return A.N(null,r)}})
 return A.O($async$wf,r)},
 N(a){var s=null
-return A.at1(A.ky(A.eV(A.a([B.t6,new A.bF(B.aj,A.cZ("Want to check my actually cool game? Check WalkScape, a mobile RPG where you walk in real life to progress.",s,s,s,s,s,s,s,new A.cQ().gd9().p3.z.bD(B.BB),B.ev,s,s),s),new A.bF(B.aj,new A.Jf(this.ga8N(),s,s,s,s,B.B,s,!1,s,!0,B.RA,s),s),B.AN],t.p),B.a9,B.a0,B.U),s,s))}}
+return A.at1(A.ky(A.eV(A.a([B.t6,new A.bF(B.aj,A.cZ("Want to see Schamppu's actually cool game? Check out WalkScape, a mobile RPG where you walk in real life to progress and level up.",s,s,s,s,s,s,s,new A.cQ().gd9().p3.z.bD(B.BB),B.ev,s,s),s),new A.bF(B.aj,new A.Jf(this.ga8N(),s,s,s,s,B.B,s,!1,s,!0,B.RA,s),s),B.AN],t.p),B.a9,B.a0,B.U),s,s))}}
 A.oM.prototype={
 e8(a){var s=0,r=A.P(t.H),q=this,p,o,n,m,l,k,j,i,h
 var $async$e8=A.Q(function(b,c){if(b===1)return A.M(c,r)
@@ -83227,7 +83227,7 @@ N(a){return new A.i9(B.zB,new A.wJ(10,this.c,null),null)},
 gaz(){return this.c}}
 A.KC.prototype={
 N(a){var s=null,r=2e6,q=A.arC(A.a6x("assets/logo.png",s,B.f7,s,s,Math.min(A.cy(a,B.eG,t.w).w.a.a/2,200)),A.bU(r,0),new A.a7I()),p=A.bU(r,0)
-return new A.bF(B.CU,A.eV(A.a([A.azs(q.oS(new A.MW(s,!0,s,p,B.C_,-1,0)),A.bU(r,0)).oS(new A.Nr(s,s,s,s,s,s,s,s,A.bU(1e6,0),s,0,1)),A.ayO(A.azs(A.ayO(A.arC(A.aLI(new A.wt("MOBILE CURLING",new A.cQ().gd9().p3.r.agc(B.lE,B.cQ),1,s),B.lE,B.h,0.5),s,new A.a7J()),B.jo,B.lV,A.bU(r,0),B.J2),s),B.jo,B.lV,A.bU(r,0),B.J9),A.cZ("Created by Schamppu and Tikibeni",s,s,s,s,s,s,s,new A.cQ().gd9().p3.z,s,s,s)],t.p),B.a9,B.a0,B.U),s)}}
+return new A.bF(B.CU,A.eV(A.a([A.azs(q.oS(new A.MW(s,!0,s,p,B.C_,-1,0)),A.bU(r,0)).oS(new A.Nr(s,s,s,s,s,s,s,s,A.bU(1e6,0),s,0,1)),A.ayO(A.azs(A.ayO(A.arC(A.aLI(new A.wt("MOBILE CURLING",new A.cQ().gd9().p3.r.agc(B.lE,B.cQ),1,s),B.lE,B.h,0.5),s,new A.a7J()),B.jo,B.lV,A.bU(r,0),B.J2),s),B.jo,B.lV,A.bU(r,0),B.J9),A.cZ("Created by Schamppu and tikibeni",s,s,s,s,s,s,s,new A.cQ().gd9().p3.z,s,s,s)],t.p),B.a9,B.a0,B.U),s)}}
 A.a7I.prototype={
 $1(a){return a.Vp(0)},
 $S:185}

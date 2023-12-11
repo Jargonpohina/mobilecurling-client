@@ -27,7 +27,7 @@ class PageAuthentication extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Want to check my actually cool game? Check WalkScape, a mobile RPG where you walk in real life to progress.',
+              'Want to see Schamppu\'s actually cool game? Check out WalkScape, a mobile RPG where you walk in real life to progress and level up.',
               textAlign: TextAlign.center,
               style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: const Color.fromARGB(255, 231, 172, 255)),
             ),
