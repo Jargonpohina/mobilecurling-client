@@ -21,23 +21,25 @@ class PageAuthentication extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: Column(
-        children: [
-          const Logo(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Want to see Schamppu\'s actually cool game? Check out WalkScape, a mobile RPG where you walk in real life to progress and level up.',
-              textAlign: TextAlign.center,
-              style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: const Color.fromARGB(255, 231, 172, 255)),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Logo(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Want to see Schamppu\'s actually cool game? Check out WalkScape, a mobile RPG where you walk in real life to progress and level up.',
+                textAlign: TextAlign.center,
+                style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: const Color.fromARGB(255, 231, 172, 255)),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FilledButton(onPressed: _launchUrl, child: const Text('Check out WalkScape')),
-          ),
-          const CardAuthentication(),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FilledButton(onPressed: _launchUrl, child: const Text('Check out WalkScape')),
+            ),
+            const CardAuthentication(),
+          ],
+        ),
       ),
     ));
   }
