@@ -12,7 +12,11 @@ import 'package:mobilecurling/core/providers/user/user.dart';
 import 'package:mobilecurling/core/shared_classes/stone/stone.dart';
 
 class GameWorld extends FlameGame {
-  GameWorld({required this.width, required this.height, this.isPortrait = false, required this.ref});
+  GameWorld(
+      {required this.width,
+      required this.height,
+      this.isPortrait = false,
+      required this.ref});
   final double width;
   final double height;
   final bool isPortrait;
@@ -25,24 +29,37 @@ class GameWorld extends FlameGame {
   Future<void> onLoad() async {
     final List<StoneObj> objects = [];
     if (isPortrait) {
-      camera = CameraComponent.withFixedResolution(width: height, height: width);
+      camera =
+          CameraComponent.withFixedResolution(width: height, height: width);
       camera.moveTo(Vector2(height / 2, width / 2));
       final stones = ref.read(gameManagerProvider)!.stones;
-      world.add(Sheet(width: height, height: width, isPortrait: isPortrait, ref: ref));
+      world.add(Sheet(
+          width: height, height: width, isPortrait: isPortrait, ref: ref));
       for (final stone in stones) {
-        objects.add(StoneObj(width: height, height: width, stone: stone, isPortrait: isPortrait, ref: ref));
+        objects.add(StoneObj(
+            width: height,
+            height: width,
+            stone: stone,
+            isPortrait: isPortrait,
+            ref: ref));
       }
       for (final stone in objects) {
         world.add(stone);
       }
     } else {
-      camera = CameraComponent.withFixedResolution(width: width, height: height);
+      camera =
+          CameraComponent.withFixedResolution(width: width, height: height);
       camera.moveTo(Vector2(width / 2, height / 2));
       final stones = ref.read(gameManagerProvider)!.stones;
-      world.add(Sheet(width: width, height: height, isPortrait: isPortrait, ref: ref));
+      world.add(Sheet(
+          width: width, height: height, isPortrait: isPortrait, ref: ref));
       for (final stone in stones) {
-        print('added stone');
-        objects.add(StoneObj(width: width, height: height, stone: stone, isPortrait: isPortrait, ref: ref));
+        objects.add(StoneObj(
+            width: width,
+            height: height,
+            stone: stone,
+            isPortrait: isPortrait,
+            ref: ref));
       }
       for (final stone in objects) {
         world.add(stone);
@@ -52,7 +69,11 @@ class GameWorld extends FlameGame {
 }
 
 class Sheet extends PositionComponent {
-  Sheet({required this.width, required this.height, this.isPortrait = true, required this.ref});
+  Sheet(
+      {required this.width,
+      required this.height,
+      this.isPortrait = true,
+      required this.ref});
   final double width;
   final double height;
   final bool isPortrait;
@@ -64,19 +85,38 @@ class Sheet extends PositionComponent {
   @override
   Future<void> onLoad() async {
     final paintIce = Paint()..color = material.Colors.white;
-    final sheet = RectangleComponent.fromRect(Rect.fromLTRB(0, 0, width, height), paint: paintIce);
+    final sheet = RectangleComponent.fromRect(
+        Rect.fromLTRB(0, 0, width, height),
+        paint: paintIce);
     final paintGoalRed = Paint()..color = material.Colors.red.withOpacity(0.2);
-    final goalRed =
-        CircleComponent(radius: 182.22, paint: paintGoalRed, position: isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250), anchor: Anchor.center);
+    final goalRed = CircleComponent(
+        radius: 182.22,
+        paint: paintGoalRed,
+        position:
+            isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250),
+        anchor: Anchor.center);
     final paintGoalWhiteOuter = Paint()..color = material.Colors.white;
-    final goalWhiteOuter =
-        CircleComponent(radius: 130, paint: paintGoalWhiteOuter, position: isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250), anchor: Anchor.center);
-    final paintGoalBlue = Paint()..color = material.Colors.blue.withOpacity(0.2);
-    final goalBlue =
-        CircleComponent(radius: 80, paint: paintGoalBlue, position: isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250), anchor: Anchor.center);
+    final goalWhiteOuter = CircleComponent(
+        radius: 130,
+        paint: paintGoalWhiteOuter,
+        position:
+            isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250),
+        anchor: Anchor.center);
+    final paintGoalBlue = Paint()
+      ..color = material.Colors.blue.withOpacity(0.2);
+    final goalBlue = CircleComponent(
+        radius: 80,
+        paint: paintGoalBlue,
+        position:
+            isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250),
+        anchor: Anchor.center);
     final paintGoalWhiteInner = Paint()..color = material.Colors.white;
-    final goalWhiteInner =
-        CircleComponent(radius: 30, paint: paintGoalWhiteInner, position: isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250), anchor: Anchor.center);
+    final goalWhiteInner = CircleComponent(
+        radius: 30,
+        paint: paintGoalWhiteInner,
+        position:
+            isPortrait ? Vector2(250, height - 3657.6) : Vector2(3657.6, 250),
+        anchor: Anchor.center);
     add(sheet);
     add(goalRed);
     add(goalWhiteOuter);
@@ -86,7 +126,12 @@ class Sheet extends PositionComponent {
 }
 
 class StoneObj extends PositionComponent {
-  StoneObj({required this.width, required this.height, required this.stone, this.isPortrait = true, required this.ref});
+  StoneObj(
+      {required this.width,
+      required this.height,
+      required this.stone,
+      this.isPortrait = true,
+      required this.ref});
   final double width;
   final double height;
   final StoneAPI stone;
@@ -96,7 +141,10 @@ class StoneObj extends PositionComponent {
 
   @override
   void update(double dt) {
-    final thisStone = ref.read(gameManagerProvider)!.stones.firstWhere((element) => element.id == stone.id);
+    final thisStone = ref
+        .read(gameManagerProvider)!
+        .stones
+        .firstWhere((element) => element.id == stone.id);
     if (isPortrait) {
       position = Vector2(thisStone.y, height - thisStone.x);
     } else {

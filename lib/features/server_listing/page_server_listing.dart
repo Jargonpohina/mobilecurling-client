@@ -60,7 +60,11 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
   }
 
   Future<void> createLobby() async {
-    final lobby = Lobby(id: const Uuid().v4(), playerOne: ref.read(userManagerProvider), playerTwo: null, createdAt: DateTime.now());
+    final lobby = Lobby(
+        id: const Uuid().v4(),
+        playerOne: ref.read(userManagerProvider),
+        playerTwo: null,
+        createdAt: DateTime.now());
     final response = await dio.post(
       '$lobbyServerUrl/lobby',
       data: lobby.toJson(),
@@ -85,7 +89,8 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
         if ((response.data as String).isNotEmpty) {
           final map = jsonDecode(response.data) as Map;
           for (final lobby in map.entries) {
-            final lobbyObj = Lobby.fromJson(lobby.value as Map<String, Object?>);
+            final lobbyObj =
+                Lobby.fromJson(lobby.value as Map<String, Object?>);
             lobbies.add(lobbyObj);
           }
         }
@@ -118,7 +123,10 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
                         children: [
                           Text(
                             'Welcome, ${user.username}',
-                            style: ThemeDataCurling().darkTheme.textTheme.bodyMedium,
+                            style: ThemeDataCurling()
+                                .darkTheme
+                                .textTheme
+                                .bodyMedium,
                           ),
                         ],
                       ),
@@ -130,7 +138,13 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
                           ),
                           Text(
                             'Your Score: ',
-                            style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Color.fromARGB(255, 245, 186, 255), fontSize: 16),
+                            style: ThemeDataCurling()
+                                .darkTheme
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                    color: Color.fromARGB(255, 245, 186, 255),
+                                    fontSize: 16),
                           ),
                           const Icon(
                             Icons.star,
@@ -139,7 +153,13 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
                           ),
                           Text(
                             ' ${user.score}'.toUpperCase(),
-                            style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Color.fromARGB(255, 245, 186, 255), fontSize: 16),
+                            style: ThemeDataCurling()
+                                .darkTheme
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                    color: Color.fromARGB(255, 245, 186, 255),
+                                    fontSize: 16),
                           ),
                         ],
                       ),
@@ -186,7 +206,8 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
                   children: [
                     Text(
                       'Lobbies (${lobbies.length})'.toUpperCase(),
-                      style: ThemeDataCurling().darkTheme.textTheme.displayMedium,
+                      style:
+                          ThemeDataCurling().darkTheme.textTheme.displayMedium,
                     ),
                   ],
                 ),
@@ -196,67 +217,119 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
                       children: [
                         for (var i = 0; i < lobbies.length; i++)
                           CardDefault(
-                              key: UniqueKey(),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Text('Server ID: ${lobbies[i].id}'),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                  key: UniqueKey(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
                                       children: [
-                                        const Text('Created at:  '),
-                                        Text(DateFormat('HH:mm d.M.y').format(lobbies[i].createdAt),
-                                            style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Color.fromARGB(255, 214, 112, 214), fontSize: 14)),
-                                      ],
-                                    ),
-                                    Text('Creator: ${lobbies[i].playerOne.username}',
-                                        style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Color.fromARGB(255, 226, 183, 226), fontSize: 16)),
-                                    lobbies[i].playerTwo == null
-                                        ? Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: SimpleShadow(
-                                              offset: Offset.zero,
-                                              opacity: 0.6,
-                                              child: Text(
-                                                'OPEN',
+                                        Text('Server ID: ${lobbies[i].id}'),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text('Created at:  '),
+                                            Text(
+                                                DateFormat('HH:mm d.M.y')
+                                                    .format(
+                                                        lobbies[i].createdAt),
                                                 style: ThemeDataCurling()
                                                     .darkTheme
                                                     .textTheme
                                                     .bodyMedium!
-                                                    .copyWith(color: Colors.green[300], fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 2),
-                                              ),
-                                            ),
-                                          )
-                                        : Text('Against: ${lobbies[i].playerTwo!.username}',
-                                            style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Color.fromARGB(255, 226, 183, 226), fontSize: 16)),
-                                    lobbies[i].playerTwo == null
-                                        ? ElevatedButton(
-                                            onPressed: () async {
-                                              await joinLobby(lobbies[i].copyWith(playerTwo: ref.read(userManagerProvider)));
-                                            },
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Icon(
-                                                  Icons.arrow_forward,
-                                                  color: Colors.green[300],
+                                                    .copyWith(
+                                                        color: Color.fromARGB(
+                                                            255, 214, 112, 214),
+                                                        fontSize: 14)),
+                                          ],
+                                        ),
+                                        Text(
+                                            'Creator: ${lobbies[i].playerOne.username}',
+                                            style: ThemeDataCurling()
+                                                .darkTheme
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                    color: Color.fromARGB(
+                                                        255, 226, 183, 226),
+                                                    fontSize: 16)),
+                                        lobbies[i].playerTwo == null
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: SimpleShadow(
+                                                  offset: Offset.zero,
+                                                  opacity: 0.6,
+                                                  child: Text(
+                                                    'OPEN',
+                                                    style: ThemeDataCurling()
+                                                        .darkTheme
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .copyWith(
+                                                            color: Colors
+                                                                .green[300],
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            letterSpacing: 2),
+                                                  ),
                                                 ),
-                                                Text(
-                                                  'Join',
-                                                  style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.green[300]),
-                                                ),
-                                              ],
-                                            ))
-                                        : const SizedBox.shrink(),
-                                  ],
-                                ),
-                              )).animate(delay: 200.ms * i).slideX(duration: 400.ms, begin: -0.2, end: 0.0, curve: Curves.easeOutCirc).fadeIn(duration: 400.ms),
+                                              )
+                                            : Text(
+                                                'Against: ${lobbies[i].playerTwo!.username}',
+                                                style: ThemeDataCurling()
+                                                    .darkTheme
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(
+                                                        color: Color.fromARGB(
+                                                            255, 226, 183, 226),
+                                                        fontSize: 16)),
+                                        lobbies[i].playerTwo == null
+                                            ? ElevatedButton(
+                                                onPressed: () async {
+                                                  await joinLobby(lobbies[i]
+                                                      .copyWith(
+                                                          playerTwo: ref.read(
+                                                              userManagerProvider)));
+                                                },
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.arrow_forward,
+                                                      color: Colors.green[300],
+                                                    ),
+                                                    Text(
+                                                      'Join',
+                                                      style: ThemeDataCurling()
+                                                          .darkTheme
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .copyWith(
+                                                              color: Colors
+                                                                  .green[300]),
+                                                    ),
+                                                  ],
+                                                ))
+                                            : const SizedBox.shrink(),
+                                      ],
+                                    ),
+                                  ))
+                              .animate(delay: 200.ms * i)
+                              .slideX(
+                                  duration: 400.ms,
+                                  begin: -0.2,
+                                  end: 0.0,
+                                  curve: Curves.easeOutCirc)
+                              .fadeIn(duration: 400.ms),
                       ],
                     )
                   : const Padding(
                       padding: EdgeInsets.only(top: 32.0),
-                      child: Text('No lobbies found. Refresh or create a lobby'),
+                      child:
+                          Text('No lobbies found. Refresh or create a lobby'),
                     ),
             ],
           ),
@@ -273,7 +346,11 @@ class _PageServerListingState extends ConsumerState<PageServerListing> {
                           child: Text(
                         errorText!,
                         textAlign: TextAlign.center,
-                        style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.red[300]),
+                        style: ThemeDataCurling()
+                            .darkTheme
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(color: Colors.red[300]),
                       )),
                     )),
                   )

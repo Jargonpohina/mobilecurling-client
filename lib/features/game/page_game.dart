@@ -10,7 +10,8 @@ import 'package:mobilecurling/core/providers/game_state/game_state.dart';
 import 'package:mobilecurling/core/providers/lobby/lobby.dart';
 import 'package:mobilecurling/core/providers/orientation/orientation.dart';
 import 'package:mobilecurling/core/providers/user/user.dart';
-import 'package:mobilecurling/core/shared_classes/game_state/game_state.dart' as gs;
+import 'package:mobilecurling/core/shared_classes/game_state/game_state.dart'
+    as gs;
 import 'package:mobilecurling/core/shared_classes/message/message.dart';
 import 'package:mobilecurling/core/shared_classes/slide/slide.dart';
 import 'package:mobilecurling/core/shared_classes/user/user.dart';
@@ -44,11 +45,17 @@ class _PageGameState extends ConsumerState<PageGame> {
     channel = WebSocketChannel.connect(uri);
     Future.delayed(const Duration(milliseconds: 500), () {
       channel!.sink.add(jsonEncode(
-        Message(type: MessageType.join, user: ref.read(userManagerProvider), lobby: ref.read(lobbyManagerProvider)).toJson(),
+        Message(
+                type: MessageType.join,
+                user: ref.read(userManagerProvider),
+                lobby: ref.read(lobbyManagerProvider))
+            .toJson(),
       ));
       channel!.stream.listen((message) {
         final map = jsonDecode(message);
-        ref.read(gameManagerProvider.notifier).update(gs.GameState.fromJson(map));
+        ref
+            .read(gameManagerProvider.notifier)
+            .update(gs.GameState.fromJson(map));
       });
     });
   }
@@ -79,52 +86,96 @@ class _PageGameState extends ConsumerState<PageGame> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         children: [
-                                          game.playerOneScore == game.playerTwoScore
+                                          game.playerOneScore ==
+                                                  game.playerTwoScore
                                               ? Text(
                                                   'Game is tied',
-                                                  style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: const Color.fromARGB(255, 247, 236, 136)),
+                                                  style: ThemeDataCurling()
+                                                      .darkTheme
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                          color: const Color
+                                                              .fromARGB(255,
+                                                              247, 236, 136)),
                                                 )
-                                              : game.playerOneScore > game.playerTwoScore
+                                              : game.playerOneScore >
+                                                      game.playerTwoScore
                                                   ? Text(
                                                       '${game.playerOne!.username} is winning!',
-                                                      style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.green[300]),
+                                                      style: ThemeDataCurling()
+                                                          .darkTheme
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .copyWith(
+                                                              color: Colors
+                                                                  .green[300]),
                                                     )
                                                   : Text(
                                                       '${game.playerTwo!.username} is winning!',
-                                                      style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.green[300]),
+                                                      style: ThemeDataCurling()
+                                                          .darkTheme
+                                                          .textTheme
+                                                          .bodyMedium!
+                                                          .copyWith(
+                                                              color: Colors
+                                                                  .green[300]),
                                                     ),
                                           Row(
                                             children: [
-                                              Text('Player one: ${game.playerOne!.username} '),
+                                              Text(
+                                                  'Player one: ${game.playerOne!.username} '),
                                               const Icon(
                                                 Icons.star,
                                                 size: 16,
-                                                color: Color.fromARGB(255, 248, 150, 245),
+                                                color: Color.fromARGB(
+                                                    255, 248, 150, 245),
                                               ),
                                               Text(
                                                 ' ${game.playerOne!.score}',
-                                                style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(
-                                                      color: const Color.fromARGB(255, 248, 150, 245),
+                                                style: ThemeDataCurling()
+                                                    .darkTheme
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              248,
+                                                              150,
+                                                              245),
                                                     ),
                                               ),
                                             ],
                                           ),
                                           Row(
                                             children: [
-                                              Text('Player two: ${game.playerTwo!.username} '),
+                                              Text(
+                                                  'Player two: ${game.playerTwo!.username} '),
                                               const Icon(
                                                 Icons.star,
                                                 size: 16,
-                                                color: Color.fromARGB(255, 248, 150, 245),
+                                                color: Color.fromARGB(
+                                                    255, 248, 150, 245),
                                               ),
                                               Text(
                                                 ' ${game.playerTwo!.score}',
-                                                style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(
-                                                      color: const Color.fromARGB(255, 248, 150, 245),
+                                                style: ThemeDataCurling()
+                                                    .darkTheme
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              248,
+                                                              150,
+                                                              245),
                                                     ),
                                               ),
                                             ],
@@ -133,7 +184,10 @@ class _PageGameState extends ConsumerState<PageGame> {
                                       ),
                                       IconButton(
                                         onPressed: () {
-                                          ref.read(portraitManagerProvider.notifier).toggle();
+                                          ref
+                                              .read(portraitManagerProvider
+                                                  .notifier)
+                                              .toggle();
                                         },
                                         style: ElevatedButton.styleFrom(),
                                         icon: const Icon(
@@ -156,61 +210,106 @@ class _PageGameState extends ConsumerState<PageGame> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: (game.gameState == gs.State.started)
                                     ? Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          game.playerInTurn == ref.read(userManagerProvider)
+                                          game.playerInTurn ==
+                                                  ref.read(userManagerProvider)
                                               ? game.canSlide
-                                                  ? StoneDragControl(dragButtonKey: dragButtonKey, channel: channel, game: game)
+                                                  ? StoneDragControl(
+                                                      dragButtonKey:
+                                                          dragButtonKey,
+                                                      channel: channel,
+                                                      game: game)
                                                   : const Padding(
-                                                      padding: EdgeInsets.all(8.0),
-                                                      child: Text('Wait until stones have stopped.'),
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      child: Text(
+                                                          'Wait until stones have stopped.'),
                                                     )
                                               : const Padding(
                                                   padding: EdgeInsets.all(8.0),
-                                                  child: Text('Wait for your turn.'),
+                                                  child: Text(
+                                                      'Wait for your turn.'),
                                                 ),
                                         ],
                                       )
                                     : game.gameState == gs.State.ended
                                         ? const Padding(
                                             padding: EdgeInsets.all(8.0),
-                                            child: Text('The winner is determined when the stones stops.'),
+                                            child: Text(
+                                                'The winner is determined when the stones stops.'),
                                           )
                                         : Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Column(
                                               children: [
-                                                game.playerOneScore == game.playerTwoScore
+                                                game.playerOneScore ==
+                                                        game.playerTwoScore
                                                     ? Text('The game was tied.',
-                                                        style:
-                                                            ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: const Color.fromARGB(255, 247, 236, 136)))
+                                                        style: ThemeDataCurling()
+                                                            .darkTheme
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .copyWith(
+                                                                color:
+                                                                    const Color.fromARGB(
+                                                                        255,
+                                                                        247,
+                                                                        236,
+                                                                        136)))
                                                     : Text(
                                                         'The winner is ${game.playerOneScore > game.playerTwoScore ? game.playerOne!.username : game.playerTwo!.username}! Congratulations.',
-                                                        style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: Colors.green[300])),
+                                                        style: ThemeDataCurling()
+                                                            .darkTheme
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .copyWith(
+                                                                color: Colors
+                                                                    .green[300])),
                                                 Padding(
-                                                  padding: const EdgeInsets.all(8.0),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
                                                   child: ElevatedButton(
                                                       onPressed: () async {
                                                         try {
-                                                          final response = await dio.post(
+                                                          final response =
+                                                              await dio.post(
                                                             '$authServerUrl/login',
-                                                            data: jsonEncode(
-                                                                User(username: ref.read(userManagerProvider).username, password: ref.read(userManagerProvider).password)
-                                                                    .toJson()),
+                                                            data: jsonEncode(User(
+                                                                    username: ref
+                                                                        .read(
+                                                                            userManagerProvider)
+                                                                        .username,
+                                                                    password: ref
+                                                                        .read(
+                                                                            userManagerProvider)
+                                                                        .password)
+                                                                .toJson()),
                                                           );
-                                                          if (response.statusCode == 200 && context.mounted) {
-                                                            ref.read(userManagerProvider.notifier).update(User.fromJson(jsonDecode(response.data)));
+                                                          if (response.statusCode ==
+                                                                  200 &&
+                                                              context.mounted) {
+                                                            ref
+                                                                .read(userManagerProvider
+                                                                    .notifier)
+                                                                .update(User.fromJson(
+                                                                    jsonDecode(
+                                                                        response
+                                                                            .data)));
                                                           }
                                                         } catch (e) {
                                                           // Do nothing.
                                                         }
                                                         if (context.mounted) {
-                                                          Navigator.of(context).pop();
+                                                          Navigator.of(context)
+                                                              .pop();
                                                         }
                                                       },
                                                       child: const Row(
                                                         children: [
-                                                          Icon(Icons.exit_to_app),
+                                                          Icon(Icons
+                                                              .exit_to_app),
                                                           Text('Exit the game'),
                                                         ],
                                                       )),
@@ -258,18 +357,22 @@ class _StoneDragControlState extends ConsumerState<StoneDragControl> {
           Draggable(
             key: widget.dragButtonKey,
             onDragUpdate: (details) {
-              RenderBox box = widget.dragButtonKey.currentContext!.findRenderObject() as RenderBox;
+              RenderBox box = widget.dragButtonKey.currentContext!
+                  .findRenderObject() as RenderBox;
               Offset pos = box.localToGlobal(Offset.zero);
               final from = pos.toVector2();
               final to = details.globalPosition.toVector2();
-              double direction = ((details.globalPosition - pos).direction) * (180 / pi) + 90;
+              double direction =
+                  ((details.globalPosition - pos).direction) * (180 / pi) + 90;
               if (direction < 0) {
                 direction = 360 + direction;
               }
               final distance = from.distanceTo(to);
               final speed = distance;
-              print('$direction $distance');
-              if ((direction < 90 || direction > 270) && speed > 60 && speed < 300) {
+              // print('$direction $distance');
+              if ((direction < 90 || direction > 270) &&
+                  speed > 60 &&
+                  speed < 300) {
                 if (!allowed) {
                   setState(() {
                     allowed = true;
@@ -282,7 +385,9 @@ class _StoneDragControlState extends ConsumerState<StoneDragControl> {
                   });
                 }
               }
-              ref.read(draggingStoneProvider.notifier).update(DraggingStoneDetails(allowed: allowed, speed: speed, direction: direction));
+              ref.read(draggingStoneProvider.notifier).update(
+                  DraggingStoneDetails(
+                      allowed: allowed, speed: speed, direction: direction));
             },
             onDragEnd: (details) {
               if (allowed) {
@@ -293,7 +398,10 @@ class _StoneDragControlState extends ConsumerState<StoneDragControl> {
                             user: ref.read(userManagerProvider),
                             lobby: ref.read(lobbyManagerProvider),
                             slide: Slide(
-                                angle: ref.read(draggingStoneProvider)!.direction, speed: ref.read(draggingStoneProvider)!.speed, user: ref.read(userManagerProvider)))
+                                angle:
+                                    ref.read(draggingStoneProvider)!.direction,
+                                speed: ref.read(draggingStoneProvider)!.speed,
+                                user: ref.read(userManagerProvider)))
                         .toJson(),
                   ));
                 }
@@ -302,7 +410,9 @@ class _StoneDragControlState extends ConsumerState<StoneDragControl> {
             childWhenDragging: Opacity(
               opacity: 0.3,
               child: Image.asset(
-                widget.game!.playerOne == ref.read(userManagerProvider) ? 'assets/stone_one.png' : 'assets/stone_two.png',
+                widget.game!.playerOne == ref.read(userManagerProvider)
+                    ? 'assets/stone_one.png'
+                    : 'assets/stone_two.png',
                 width: 64,
                 height: 64,
                 filterQuality: FilterQuality.none,
@@ -315,7 +425,9 @@ class _StoneDragControlState extends ConsumerState<StoneDragControl> {
               data: MediaQueryData.fromView(View.of(context)),
             ),
             child: Image.asset(
-              widget.game!.playerOne == ref.read(userManagerProvider) ? 'assets/stone_one.png' : 'assets/stone_two.png',
+              widget.game!.playerOne == ref.read(userManagerProvider)
+                  ? 'assets/stone_one.png'
+                  : 'assets/stone_two.png',
               width: 64,
               height: 64,
               filterQuality: FilterQuality.none,
@@ -353,7 +465,9 @@ class DraggingStone extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
-                  game.playerOne == ref.read(userManagerProvider) ? 'assets/stone_one.png' : 'assets/stone_two.png',
+                  game.playerOne == ref.read(userManagerProvider)
+                      ? 'assets/stone_one.png'
+                      : 'assets/stone_two.png',
                   width: 64,
                   height: 64,
                   filterQuality: FilterQuality.none,
@@ -362,11 +476,21 @@ class DraggingStone extends ConsumerWidget {
                 ),
                 Text(
                   'Speed: ${(details.speed).toStringAsFixed(2)} cm/s',
-                  style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: details.allowed ? null : Colors.red[300]),
+                  style: ThemeDataCurling()
+                      .darkTheme
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(
+                          color: details.allowed ? null : Colors.red[300]),
                 ),
                 Text(
                   'Direction: ${(details.direction).toStringAsFixed(0)}°',
-                  style: ThemeDataCurling().darkTheme.textTheme.bodyMedium!.copyWith(color: details.allowed ? null : Colors.red[300]),
+                  style: ThemeDataCurling()
+                      .darkTheme
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(
+                          color: details.allowed ? null : Colors.red[300]),
                 ),
               ],
             ),
