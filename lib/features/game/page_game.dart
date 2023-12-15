@@ -369,7 +369,6 @@ class _StoneDragControlState extends ConsumerState<StoneDragControl> {
               }
               final distance = from.distanceTo(to);
               final speed = distance;
-              // print('$direction $distance');
               if ((direction < 90 || direction > 270) &&
                   speed > 60 &&
                   speed < 300) {
